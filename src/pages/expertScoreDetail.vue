@@ -22,6 +22,7 @@
         <el-table-column v-for="bidder in bidderList" :key="bidder.id" :label="bidder.name" width="80">
           <template slot-scope="scope">
             <el-input v-model="itemBidderScoreMap.get(scope.row.id).get(bidder.id).score" v-on:blur="checkScoreThenChange(itemBidderScoreMap.get(scope.row.id).get(bidder.id), scope.row.maxValue)" :disabled="scope.row.categoryId === 3 || pkgExpertRel.modifiable != 1"></el-input>
+            <span v-if="scope.row.categoryId === 3">报价: {{bidPriceMap.get(bidder.id)}} 万元</span>
           </template>
         </el-table-column>
       </el-table>
@@ -62,6 +63,9 @@ export default {
           this.itemBidderScoreMap.set(item.id, bidderScoresMap)
         }
         console.log(this.itemBidderScoreMap)
+        for (var price of resp.data.bidPrices) {
+          this.bidPriceMap.set(price.bidderId, price.price)
+        }
       })
   },
   computed: {
@@ -101,7 +105,7 @@ export default {
           }
         }
       }
-      this.$confirm('提交后评分生效, 是否继续?', '提示', {
+      this.$confirm('请仔细核对，确认后不能修改！', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -131,6 +135,19 @@ export default {
         score.score = null
         return
       }
+      var tem = (score.score) * 10 - Math.floor((score.score) * 10)
+      if (tem > 0.000001 || tem < -0.000001) {
+        this.$confirm('仅接受小数点后一位数字', '输入格式有误', {
+          distinguishCancelAndClose: true,
+          showCancelButton: false,
+          showConfirmButton: false,
+          showClose: false
+        })
+          .then(() => {})
+          .catch(action => {})
+        score.score = null
+        return
+      }
 
       console.log(score)
       console.log(this.bidderTotalObj)
@@ -154,7 +171,8 @@ export default {
       pkgExpertRels: [],
       pkgExpertRel: {},
       itemBidderScoreMap: new Map(),
-      bidderTotalObj: {}
+      bidderTotalObj: {},
+      bidPriceMap: new Map()
     }
   }
 }

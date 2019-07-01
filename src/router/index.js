@@ -6,6 +6,7 @@ import expertScoreDetail from '../pages/expertScoreDetail.vue'
 import hostPkgsPrice from '../pages/hostPkgsPrice.vue'
 import hostPkgList from '../pages/hostPkgList.vue'
 import hostPkgTotalScore from '../pages/hostPkgTotalScore.vue'
+import hostWaitExpertScore from '../pages/hostWaitExpertScore.vue'
 
 Vue.use(Router)
 
@@ -35,6 +36,10 @@ export default new Router({
     {
       path: '/hostPkgTotalScore',
       component: hostPkgTotalScore
+    },
+    {
+      path: '/hostWaitExpertScore',
+      component: hostWaitExpertScore
     }
   ]
 })
