@@ -17,6 +17,8 @@
           </el-table-column>
           <el-table-column prop="priceItem.maxValue" label="分值" width="80">
           </el-table-column>
+          <el-table-column prop="bidUpperLimit" label="最高限价(万元)" width="80">
+          </el-table-column>
           <el-table-column v-for="(bidder) in pkg.bidders" :key="bidder.id" :label="bidder.name">
             <el-table-column label="价格">
               <template slot-scope="scope">
