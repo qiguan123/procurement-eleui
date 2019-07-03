@@ -19,11 +19,6 @@
           </el-table-column>
           <el-table-column prop="bidUpperLimit" label="最高限价(万元)" width="80">
           </el-table-column>
-          <el-table-column label="最低报价比例" width="80">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.minPercent"></el-input>最低报价{{scope.row.bidUpperLimit * scope.row.minPercent}}
-            </template>
-          </el-table-column>
           <el-table-column v-for="(bidder) in pkg.bidders" :key="bidder.id" :label="bidder.name">
             <el-table-column label="价格">
               <template slot-scope="scope">

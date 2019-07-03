@@ -13,7 +13,7 @@
       <el-table :data="pkg.bidders" border style="width: 100%">
         <el-table-column prop="name" label="公司名称">
         </el-table-column>
-        <el-table-column label="平均分">
+        <el-table-column label="平均分(去掉1个最高分、1个最低分)">
           <template slot-scope="scope">
             {{ bidderMeanScore.get(scope.row.id) }}
           </template>
@@ -41,9 +41,25 @@ export default {
       .then((resp) => {
         this.pkg = resp.data
         console.log(this.pkg)
+        var bidderMaxScoreMap = new Map()
+        var bidderMinScoreMap = new Map()
         for (var score of this.pkg.totalItem.scores) {
           if (score.score === null) {
             continue
+          }
+          // 专家最高分
+          var max = bidderMaxScoreMap.get(score.bidderId)
+          if (max === null || isNaN(max) || max === '') {
+            bidderMaxScoreMap.set(score.bidderId, score.score)
+          } else if (max < score.score) {
+            bidderMaxScoreMap.set(score.bidderId, score.score)
+          }
+          // 专家最低分
+          var min = bidderMinScoreMap.get(score.bidderId)
+          if (min === null || isNaN(min) || min === '') {
+            bidderMinScoreMap.set(score.bidderId, score.score)
+          } else if (min > score.score) {
+            bidderMinScoreMap.set(score.bidderId, score.score)
           }
           var bidderTotal = this.bidderMeanScore.get(score.bidderId)
           if (bidderTotal === null || isNaN(bidderTotal) || bidderTotal === '') {
@@ -52,8 +68,11 @@ export default {
           bidderTotal += score.score
           this.bidderMeanScore.set(score.bidderId, bidderTotal)
         }
+        console.log(bidderMaxScoreMap)
+        console.log(bidderMinScoreMap)
         for (var [bidderId, totalScore] of this.bidderMeanScore) {
-          this.bidderMeanScore.set(bidderId, toDecimal(totalScore / (this.pkg.experts.length)))
+          var total = totalScore - bidderMaxScoreMap.get(bidderId) - bidderMinScoreMap.get(bidderId)
+          this.bidderMeanScore.set(bidderId, toDecimal(total / (this.pkg.experts.length - 2)))
         }
         for (var p of this.pkg.bidPrices) {
           this.bidderPriceMap.set(p.bidderId, p.price)

@@ -3,15 +3,19 @@
     <el-container>
       <el-header></el-header>
       <el-main>
-        <h2>
+        <h1>
           <p>{{ conference.name }} 招标会议</p>
-        </h2>
-        <div >
+        </h1>
+        <div>
           <el-select v-model="expertId" placeholder="专家姓名">
             <el-option v-for="e in experts" :key="e.id" :label="e.name" :value="e.id">
             </el-option>
           </el-select>
           <el-button type="primary" plain v-on:click="checkAndLogin" >进入会议</el-button>
+        </div>
+        <div>
+          <el-checkbox v-model="agree"></el-checkbox>
+          同意遵守<a href="/api/expert_policy.html" target="_blank">招标评审纪律</a>
         </div>
       </el-main>
       <el-footer>
@@ -29,7 +33,8 @@ export default {
         name: ''
       },
       experts: [],
-      expertId: ''
+      expertId: '',
+      agree: false
     }
   },
   created () {
@@ -53,7 +58,10 @@ export default {
         })
     },
     checkAndLogin: function () {
-      console.log(this.expertId)
+      if (!(this.agree)) {
+        this.$message.error('请阅读并接受评审纪律')
+        return
+      }
       if (this.expertId > 0) {
         rootVm.$router.push({
           path: 'expertPkgs',
@@ -62,8 +70,6 @@ export default {
             expertId: this.expertId
           }
         })
-      } else {
-        this.$message.error(this.expert.name + ', 您不是本次会议的专家')
       }
     }
   }
@@ -74,4 +80,8 @@ export default {
         width: 100%;
         text-align: center;
     }
+    .index div {
+      padding: 10px
+    }
+
 </style>

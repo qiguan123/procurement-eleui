@@ -15,7 +15,7 @@
         </el-table-column>
         <el-table-column prop="standard" label="标准">
         </el-table-column>
-        <el-table-column prop="relateFilesName" label="评审依据" width="100">
+        <el-table-column prop="relateFilesName" label="评审依据" width="120">
         </el-table-column>
         <el-table-column prop="maxValue" label="分值" width="50">
         </el-table-column>
