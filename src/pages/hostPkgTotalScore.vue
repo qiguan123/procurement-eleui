@@ -5,7 +5,7 @@
     </el-header>
     <el-main>
       <h1>
-        <p style="text-align: center">{{pkg.name}} 招标价格评分</p>
+        <p style="text-align: center">{{pkg.name}} 招标评分结果</p>
       </h1>
       <h2>
         <el-button type="primary" size="mini" @click="exportScoreExcel(pkg.id)">导出评分表</el-button>
@@ -68,12 +68,12 @@ export default {
           bidderTotal += score.score
           this.bidderMeanScore.set(score.bidderId, bidderTotal)
         }
-        console.log(bidderMaxScoreMap)
-        console.log(bidderMinScoreMap)
         for (var [bidderId, totalScore] of this.bidderMeanScore) {
           var total = totalScore - bidderMaxScoreMap.get(bidderId) - bidderMinScoreMap.get(bidderId)
           this.bidderMeanScore.set(bidderId, toDecimal(total / (this.pkg.experts.length - 2)))
         }
+        console.log(this.bidderMeanScore)
+        this.pkg.bidders.sort((a, b) => this.bidderMeanScore.get(b.id) - this.bidderMeanScore.get(a.id))
         for (var p of this.pkg.bidPrices) {
           this.bidderPriceMap.set(p.bidderId, p.price)
         }
