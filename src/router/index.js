@@ -7,6 +7,8 @@ import hostPkgsPrice from '../pages/hostPkgsPrice.vue'
 import hostPkgList from '../pages/hostPkgList.vue'
 import hostPkgTotalScore from '../pages/hostPkgTotalScore.vue'
 import hostWaitExpertScore from '../pages/hostWaitExpertScore.vue'
+import manageLayout from '../pages/manage/layout.vue'
+import conferenceList from '../pages/manage/conferenceList.vue'
 
 Vue.use(Router)
 
@@ -40,6 +42,14 @@ export default new Router({
     {
       path: '/hostWaitExpertScore',
       component: hostWaitExpertScore
+    },
+    {
+      path: '/manage',
+      component: manageLayout,
+      children: [{
+        path: '/',
+        component: conferenceList
+      }]
     }
   ]
 })
